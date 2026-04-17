@@ -4,6 +4,10 @@
 ## 📥 Download Latest Release
 **[Download v1.0.0](https://github.com/missydivine61076-maker/VERIZONS-MENU/releases/tag/v1.0.0)** - All files included!
 
+**Quick Downloads:**
+- [GorillaTagMods.lua](https://github.com/missydivine61076-maker/VERIZONS-MENU/releases/download/v1.0.0/GorillaTagMods.lua) - Gorilla Tag Mod Menu
+- [RivalsModMenu.lua](https://github.com/missydivine61076-maker/VERIZONS-MENU/releases/download/v1.0.0/RivalsModMenu.lua) - Rivals Mod Menu
+
 ## Features
 
 ### Gorilla Tag Mod Menu
