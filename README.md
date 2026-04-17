@@ -32,7 +32,7 @@
 5. Press **K** to open the mod menu in-game
 
 ## Controls
-- **Insert Key** - Toggle menu visibility
+- **Y Key** - Toggle menu visibility
 - **Click buttons** - Activate features
 
 ## Version

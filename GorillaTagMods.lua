@@ -112,7 +112,7 @@ function GorillaTagMods:createGUI()
     infoLabel.TextColor3 = Color3.fromRGB(100, 150, 200)
     infoLabel.Font = Enum.Font.GothamMonospace
     infoLabel.TextSize = 9
-    infoLabel.Text = "Press K to toggle menu"
+    infoLabel.Text = "Press Y to toggle menu"
     infoLabel.Parent = mainPanel
     
     return mainPanel
@@ -347,7 +347,7 @@ local UserInputService = game:GetService("UserInputService")
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
     if gameProcessed then return end
     
-    if input.KeyCode == Enum.KeyCode.K then
+    if input.KeyCode == Enum.KeyCode.Y then
         GorillaTagMods:toggleMenu()
     end
 end)
@@ -357,7 +357,7 @@ function GorillaTagMods:init()
     print("=== VERIZONS GORILLA TAG MOD MENU ===")
     print("Version: " .. self.version)
     print("Author: " .. self.author)
-    print("Press K to toggle menu")
+    print("Press Y to toggle menu")
     
     self:createGUI()
     print("✓ Mod Menu Loaded Successfully!")
