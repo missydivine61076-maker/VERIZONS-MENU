@@ -24,8 +24,12 @@
 2. Copy the code from `RivalsModMenu.lua`
 3. Paste and execute in the game
 
-### Gorilla Tag
-[Mod installation instructions coming soon]
+### Gorilla Tag (VR)
+1. Ensure GorillaTag is installed and running
+2. Open your mod loader (MelonLoader/BepInEx)
+3. Copy code from `GorillaTagMods.lua`
+4. Load the mod in your executor
+5. Press **K** to open the mod menu in-game
 
 ## Controls
 - **Insert Key** - Toggle menu visibility
