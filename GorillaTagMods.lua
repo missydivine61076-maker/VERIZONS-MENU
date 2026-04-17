@@ -13,7 +13,11 @@ local featureStates = {
     pullMod = false,
     soundboard = false,
     banGun = false,
-    speedBoost = false
+    speedBoost = false,
+    flight = false,
+    teleportation = false,
+    noClip = false,
+    infiniteJump = false
 }
 
 -- Configuration
@@ -92,11 +96,14 @@ function GorillaTagMods:createGUI()
     self:addFeatureButton(scrollFrame, "👹 Ghost Trolls", "ghostTrolls", 2)
     self:addFeatureButton(scrollFrame, "🤏 Pull Mod (+3%)", "pullMod", 3)
     self:addFeatureButton(scrollFrame, "⚡ Speed Boost", "speedBoost", 4)
-    self:addFeatureButton(scrollFrame, "🔊 Soundboard", "soundboard", 5)
-    self:addFeatureButton(scrollFrame, "🔫 Ban Gun (30min)", "banGun", 6)
+    self:addFeatureButton(scrollFrame, "✈️ Flight Mode", "flight", 5)
+    self:addFeatureButton(scrollFrame, "📍 Teleportation", "teleportation", 6)
+    self:addFeatureButton(scrollFrame, "👁️ No-Clip", "noClip", 7)
+    self:addFeatureButton(scrollFrame, "⬆️ Infinite Jump", "infiniteJump", 8)
+    self:addFeatureButton(scrollFrame, "🔫 Ban Gun (30min)", "banGun", 9)
     
     -- Soundboard Section
-    self:addSoundboardButtons(scrollFrame, 7)
+    self:addSoundboardButtons(scrollFrame, 10)
     
     -- Update Canvas Size
     scrollFrame.CanvasSize = UDim2.new(0, 0, 0, UIListLayout.AbsoluteContentSize.Y + 20)
@@ -213,6 +220,14 @@ function GorillaTagMods:activateFeature(featureKey)
         self:toggleBanGun(featureStates.banGun)
     elseif featureKey == "soundboard" then
         soundboard.enabled = featureStates.soundboard
+    elseif featureKey == "flight" then
+        self:toggleFlight(featureStates.flight)
+    elseif featureKey == "teleportation" then
+        self:toggleTeleportation(featureStates.teleportation)
+    elseif featureKey == "noClip" then
+        self:toggleNoClip(featureStates.noClip)
+    elseif featureKey == "infiniteJump" then
+        self:toggleInfiniteJump(featureStates.infiniteJump)
     end
 end
 
@@ -314,6 +329,127 @@ function GorillaTagMods:toggleBanGun(enabled)
         end)
     else
         print("🔫 Ban Gun: DISABLED")
+    end
+end
+
+-- Flight Mode
+function GorillaTagMods:toggleFlight(enabled)
+    local player = game.Players.LocalPlayer
+    if not player.Character then return end
+    
+    if enabled then
+        print("✈️ Flight Mode: ENABLED")
+        local character = player.Character
+        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+        
+        if humanoidRootPart then
+            -- Create BodyVelocity for flight
+            local bodyVelocity = Instance.new("BodyVelocity")
+            bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+            bodyVelocity.P = 9000
+            bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+            bodyVelocity.Parent = humanoidRootPart
+            
+            -- Flight loop
+            local flying = true
+            while flying and featureStates.flight do
+                local camera = workspace.CurrentCamera
+                local moveDirection = Vector3.new(0, 0, 0)
+                
+                if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.W) then
+                    moveDirection = moveDirection + (camera.CFrame.LookVector * Vector3.new(1, 0, 1)).Unit
+                end
+                if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.S) then
+                    moveDirection = moveDirection - (camera.CFrame.LookVector * Vector3.new(1, 0, 1)).Unit
+                end
+                if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.A) then
+                    moveDirection = moveDirection - camera.CFrame.RightVector
+                end
+                if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.D) then
+                    moveDirection = moveDirection + camera.CFrame.RightVector
+                end
+                if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.Space) then
+                    moveDirection = moveDirection + Vector3.new(0, 1, 0)
+                end
+                if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl) then
+                    moveDirection = moveDirection - Vector3.new(0, 1, 0)
+                end
+                
+                bodyVelocity.Velocity = moveDirection.Unit * 50
+                game:GetService("RunService").RenderStepped:Wait()
+            end
+            
+            bodyVelocity:Destroy()
+        end
+    else
+        print("✈️ Flight Mode: DISABLED")
+    end
+end
+
+-- Teleportation
+function GorillaTagMods:toggleTeleportation(enabled)
+    if enabled then
+        print("📍 Teleportation: ENABLED (Click to teleport)")
+        local mouse = game.Players.LocalPlayer:GetMouse()
+        mouse.Button1Down:Connect(function()
+            if featureStates.teleportation then
+                local character = game.Players.LocalPlayer.Character
+                if character and mouse.Target then
+                    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+                    if humanoidRootPart then
+                        humanoidRootPart.CFrame = CFrame.new(mouse.Hit.Position + Vector3.new(0, 3, 0))
+                    end
+                end
+            end
+        end)
+    else
+        print("📍 Teleportation: DISABLED")
+    end
+end
+
+-- No-Clip
+function GorillaTagMods:toggleNoClip(enabled)
+    local character = game.Players.LocalPlayer.Character
+    if not character then return end
+    
+    if enabled then
+        print("👁️ No-Clip: ENABLED")
+        for _, part in pairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = false
+            end
+        end
+    else
+        print("👁️ No-Clip: DISABLED")
+        for _, part in pairs(character:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.CanCollide = true
+            end
+        end
+    end
+end
+
+-- Infinite Jump
+function GorillaTagMods:toggleInfiniteJump(enabled)
+    if enabled then
+        print("⬆️ Infinite Jump: ENABLED")
+        local player = game.Players.LocalPlayer
+        local UserInputService = game:GetService("UserInputService")
+        
+        UserInputService.InputBegan:Connect(function(input, gameProcessed)
+            if not gameProcessed and input.KeyCode == Enum.KeyCode.Space then
+                if featureStates.infiniteJump then
+                    if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                        local humanoid = player.Character:FindFirstChild("Humanoid")
+                        if humanoid then
+                            humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                        end
+                    end
+                end
+            end
+        end)
+    else
+        print("⬆️ Infinite Jump: DISABLED")
     end
 end
 

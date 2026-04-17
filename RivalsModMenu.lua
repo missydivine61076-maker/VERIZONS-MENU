@@ -1,9 +1,10 @@
 -- VERIZONS MOD MENU FOR RIVALS
--- A clean, legitimate mod menu with cosmetics and utilities
+-- A clean, legitimate mod menu with cosmetics, utilities, and advanced features
 
 local modMenu = {}
 modMenu.enabled = true
 modMenu.uiVisible = true
+modMenu.version = "1.1.0"
 
 -- Menu Configuration
 local menuConfig = {
@@ -18,7 +19,11 @@ local features = {
     soundboard = true,
     cosmetics = true,
     stats = true,
-    ui = true
+    ui = true,
+    flight = true,
+    teleportation = true,
+    noClip = true,
+    infiniteJump = true
 }
 
 -- Soundboard Sounds
@@ -98,6 +103,14 @@ function modMenu:createUI()
         {name = "Dark Skin", toggle = true},
         {name = "Neon Glow", toggle = true},
         {name = "Trail Effects", toggle = true}
+    })
+    
+    -- Movement Section
+    self:addSection(scrollFrame, "MOVEMENT", {
+        {name = "Flight Mode", toggle = true},
+        {name = "Teleportation", toggle = true},
+        {name = "No-Clip", toggle = true},
+        {name = "Infinite Jump", toggle = true}
     })
     
     -- Soundboard Section
@@ -268,6 +281,99 @@ function modMenu:playSound(soundName)
         sound:Play()
         game:GetService("Debris"):AddItem(sound, 2)
     end
+end
+
+-- Flight Mode
+function modMenu:toggleFlight()
+    print("✈️ Flight Mode activated (Hold Space to fly)")
+    local player = game.Players.LocalPlayer
+    if not player.Character then return end
+    
+    local character = player.Character
+    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+    
+    if humanoidRootPart then
+        local bodyVelocity = Instance.new("BodyVelocity")
+        bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+        bodyVelocity.P = 9000
+        bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+        bodyVelocity.Parent = humanoidRootPart
+        
+        while features.flight do
+            local camera = workspace.CurrentCamera
+            local moveDirection = Vector3.new(0, 0, 0)
+            
+            if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.W) then
+                moveDirection = moveDirection + (camera.CFrame.LookVector * Vector3.new(1, 0, 1)).Unit
+            end
+            if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.S) then
+                moveDirection = moveDirection - (camera.CFrame.LookVector * Vector3.new(1, 0, 1)).Unit
+            end
+            if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.A) then
+                moveDirection = moveDirection - camera.CFrame.RightVector
+            end
+            if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.D) then
+                moveDirection = moveDirection + camera.CFrame.RightVector
+            end
+            if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.Space) then
+                moveDirection = moveDirection + Vector3.new(0, 1, 0)
+            end
+            if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl) then
+                moveDirection = moveDirection - Vector3.new(0, 1, 0)
+            end
+            
+            bodyVelocity.Velocity = moveDirection.Unit * 50
+            game:GetService("RunService").RenderStepped:Wait()
+        end
+        
+        bodyVelocity:Destroy()
+    end
+end
+
+-- Teleportation
+function modMenu:enableTeleportation()
+    print("📍 Teleportation enabled (Click to teleport)")
+    local mouse = game.Players.LocalPlayer:GetMouse()
+    mouse.Button1Down:Connect(function()
+        local character = game.Players.LocalPlayer.Character
+        if character and mouse.Target and features.teleportation then
+            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+            if humanoidRootPart then
+                humanoidRootPart.CFrame = CFrame.new(mouse.Hit.Position + Vector3.new(0, 3, 0))
+            end
+        end
+    end)
+end
+
+-- No-Clip
+function modMenu:toggleNoClip()
+    print("👁️ No-Clip Mode activated")
+    local character = game.Players.LocalPlayer.Character
+    if not character then return end
+    
+    for _, part in pairs(character:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.CanCollide = false
+        end
+    end
+end
+
+-- Infinite Jump
+function modMenu:enableInfiniteJump()
+    print("⬆️ Infinite Jump activated")
+    local UserInputService = game:GetService("UserInputService")
+    local player = game.Players.LocalPlayer
+    
+    UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if not gameProcessed and input.KeyCode == Enum.KeyCode.Space then
+            if features.infiniteJump and player.Character then
+                local humanoid = player.Character:FindFirstChild("Humanoid")
+                if humanoid then
+                    humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end
+        end
+    end)
 end
 
 -- Initialize Menu

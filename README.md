@@ -15,10 +15,19 @@
 - 👻 Ghost Monkey mode
 - 👹 Ghost Trolls mode
 - 🤏 Pull Mod with 3% speed boost
+- ⚡ Speed Boost (+3%)
+- ✈️ Flight Mode
+- 📍 Teleportation
+- 👁️ No-Clip Mode
+- ⬆️ Infinite Jump
 - 🔫 Ban Gun (30-minute bans)
 
 ### Rivals Mod Menu
 - 🎨 Cosmetics & Skins
+- ✈️ Flight Mode
+- 📍 Teleportation
+- 👁️ No-Clip Mode
+- ⬆️ Infinite Jump
 - 🔊 Soundboard with victory/defeat sounds
 - 📊 Game Stats Display
 - ⚙️ Settings & Customization
