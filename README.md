@@ -1,6 +1,9 @@
 # VERIZONS-MENU
 **A powerful mod menu suite for multiple games**
 
+## 📥 Download Latest Release
+**[Download v1.0.0](https://github.com/missydivine61076-maker/VERIZONS-MENU/releases/tag/v1.0.0)** - All files included!
+
 ## Features
 
 ### Gorilla Tag Mod Menu
